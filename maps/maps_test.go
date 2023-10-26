@@ -5,8 +5,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/kode4food/ale/internal/assert"
-	"github.com/kode4food/ale/internal/maps"
+	"github.com/kode4food/compcomb/maps"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestKeys(t *testing.T) {

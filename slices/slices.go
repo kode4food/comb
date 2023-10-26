@@ -20,7 +20,15 @@ func IndexedMap[In, Out any](in []In, fn func(In, int) Out) []Out {
 }
 
 func SortedMap[In any, Out cmp.Ordered](in []In, fn func(In) Out) []Out {
-	res := Map(in, fn)
+	return SortedIndexedMap(in, func(e In, _ int) Out {
+		return fn(e)
+	})
+}
+
+func SortedIndexedMap[In any, Out cmp.Ordered](
+	in []In, fn func(In, int) Out,
+) []Out {
+	res := IndexedMap(in, fn)
 	slices.Sort(res)
 	return res
 }

@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/kode4food/ale/internal/assert"
-	"github.com/kode4food/ale/internal/slices"
+	"github.com/kode4food/compcomb/slices"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMap(t *testing.T) {

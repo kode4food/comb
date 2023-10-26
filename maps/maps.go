@@ -26,3 +26,27 @@ func SortedKeysFunc[K comparable, V any](in map[K]V, fn func(l, r K) int) []K {
 	slices.SortFunc(res, fn)
 	return res
 }
+
+func Values[K comparable, V any](in map[K]V) []V {
+	res := make([]V, len(in))
+	i := 0
+	for _, v := range in {
+		res[i] = v
+		i++
+	}
+	return res
+}
+
+func SortedValues[K comparable, V cmp.Ordered](in map[K]V) []V {
+	res := Values(in)
+	slices.Sort(res)
+	return res
+}
+
+func SortedValuesFunc[K comparable, V any](
+	in map[K]V, fn func(l, r V) int,
+) []V {
+	res := Values(in)
+	slices.SortFunc(res, fn)
+	return res
+}
