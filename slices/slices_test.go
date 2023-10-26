@@ -52,4 +52,10 @@ func TestFind(t *testing.T) {
 	)
 	as.True(ok)
 	as.Equal("Upper", s)
+
+	s, ok = slices.Find([]string{}, func(in string) bool {
+		return strings.ToLower(in) != in
+	})
+	as.False(ok)
+	as.Equal("", s)
 }
