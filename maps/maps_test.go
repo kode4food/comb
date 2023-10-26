@@ -40,3 +40,39 @@ func TestSortedKeysFunc(t *testing.T) {
 	})
 	as.Equal([]string{"occupation", "name", "age"}, m)
 }
+
+func TestValues(t *testing.T) {
+	as := assert.New(t)
+	m := maps.Values(map[string]int{
+		"j": 8,
+		"e": 6,
+		"n": 7,
+		"y": 5,
+	})
+	slices.Sort(m)
+	as.Equal([]int{5, 6, 7, 8}, m)
+}
+
+func TestSortedValues(t *testing.T) {
+	as := assert.New(t)
+	m := maps.SortedValues(map[string]int{
+		"j": 8,
+		"e": 6,
+		"n": 7,
+		"y": 5,
+	})
+	as.Equal([]int{5, 6, 7, 8}, m)
+}
+
+func TestSortedValuesFunc(t *testing.T) {
+	as := assert.New(t)
+	m := maps.SortedValuesFunc(map[string]int{
+		"j": 8,
+		"e": 6,
+		"n": 7,
+		"y": 5,
+	}, func(l, r int) int {
+		return -cmp.Compare(l, r)
+	})
+	as.Equal([]int{8, 7, 6, 5}, m)
+}
