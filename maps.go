@@ -1,6 +1,6 @@
-package compcomb
+package comb
 
-import "github.com/kode4food/compcomb/maps"
+import "github.com/kode4food/comb/maps"
 
 type (
 	MapBuilder[K comparable, V any] map[K]V

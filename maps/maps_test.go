@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/kode4food/compcomb/maps"
+	"github.com/kode4food/comb/maps"
 	"github.com/stretchr/testify/assert"
 )
 

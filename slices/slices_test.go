@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/kode4food/compcomb/slices"
+	"github.com/kode4food/comb/slices"
 	"github.com/stretchr/testify/assert"
 )
 

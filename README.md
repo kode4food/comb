@@ -1,3 +1,3 @@
-# CompComb
+# Comb
 
 Comprehension Combinators for Go

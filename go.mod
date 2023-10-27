@@ -1,4 +1,4 @@
-module github.com/kode4food/compcomb
+module github.com/kode4food/comb
 
 go 1.21
 
