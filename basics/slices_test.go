@@ -2,6 +2,7 @@ package basics_test
 
 import (
 	"cmp"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -18,6 +19,17 @@ func TestMap(t *testing.T) {
 		},
 	)
 	as.Equal([]bool{false, true, false, false}, m)
+}
+
+func TestIndexedMap(t *testing.T) {
+	as := assert.New(t)
+	m := basics.IndexedMap(
+		[]string{"is", "Upper", "not", "lower"},
+		func(in string, idx int) string {
+			return fmt.Sprintf("%d-%s", idx, in)
+		},
+	)
+	as.Equal([]string{"0-is", "1-Upper", "2-not", "3-lower"}, m)
 }
 
 func TestSortedMap(t *testing.T) {
