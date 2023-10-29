@@ -18,13 +18,13 @@ const (
 	ErrElementNotFound = "element not found"
 )
 
-func Filter[T any](fn Predicate[T]) Comp[[]T, []T] {
+func Filter[T any](fn Predicate[T]) Comb[[]T, []T] {
 	return func(in []T) ([]T, error) {
 		return basics.Filter(in, fn), nil
 	}
 }
 
-func Find[T any](fn Predicate[T]) Comp[[]T, T] {
+func Find[T any](fn Predicate[T]) Comb[[]T, T] {
 	return func(in []T) (T, error) {
 		e, ok := basics.Find(in, fn)
 		if !ok {
@@ -34,29 +34,29 @@ func Find[T any](fn Predicate[T]) Comp[[]T, T] {
 	}
 }
 
-func Map[In, Out any](fn Mapper[In, Out]) Comp[[]In, []Out] {
+func Map[In, Out any](fn Mapper[In, Out]) Comb[[]In, []Out] {
 	return func(in []In) ([]Out, error) {
 		return basics.Map(in, fn), nil
 	}
 }
 
-func SortedMap[In any, Out cmp.Ordered](fn Mapper[In, Out]) Comp[[]In, []Out] {
+func SortedMap[In any, Out cmp.Ordered](fn Mapper[In, Out]) Comb[[]In, []Out] {
 	return Map(fn).Then(Sort[Out]())
 }
 
 func SortedMapFunc[In any, Out cmp.Ordered](
 	fn Mapper[In, Out], comp Compare[Out],
-) Comp[[]In, []Out] {
+) Comb[[]In, []Out] {
 	return Map(fn).Then(SortFunc(comp))
 }
 
-func Sort[T cmp.Ordered]() Comp[[]T, []T] {
+func Sort[T cmp.Ordered]() Comb[[]T, []T] {
 	return func(in []T) ([]T, error) {
 		return basics.Sort(in), nil
 	}
 }
 
-func SortFunc[T any](fn Compare[T]) Comp[[]T, []T] {
+func SortFunc[T any](fn Compare[T]) Comb[[]T, []T] {
 	return func(in []T) ([]T, error) {
 		return basics.SortFunc(in, fn), nil
 	}

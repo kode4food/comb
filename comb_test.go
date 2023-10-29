@@ -35,7 +35,7 @@ func TestCompose(t *testing.T) {
 func TestMust(t *testing.T) {
 	as := assert.New(t)
 
-	c := comb.Comp[bool, bool](func(b bool) (bool, error) {
+	c := comb.Comb[bool, bool](func(b bool) (bool, error) {
 		if b {
 			return true, nil
 		}
@@ -57,12 +57,12 @@ func TestMust(t *testing.T) {
 func TestBind(t *testing.T) {
 	as := assert.New(t)
 
-	c := comb.Comp[bool, string](func(in bool) (string, error) {
+	c := comb.Comb[bool, string](func(in bool) (string, error) {
 		if in {
 			return "true", nil
 		}
 		return "false", nil
-	}).Bind(func(s string) comb.Comp[string, string] {
+	}).Bind(func(s string) comb.Comb[string, string] {
 		if s == "true" {
 			return func(s string) (string, error) {
 				return "Hello", nil
