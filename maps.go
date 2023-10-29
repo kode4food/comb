@@ -19,17 +19,17 @@ func Values[K comparable, V any]() Comp[map[K]V, []V] {
 }
 
 func SortedKeys[K cmp.Ordered, V any]() Comp[map[K]V, []K] {
-	return Compose(Keys[K, V](), Sort[K]())
+	return Keys[K, V]().Then(Sort[K]())
 }
 
 func SortedKeysFunc[K comparable, V any](fn Compare[K]) Comp[map[K]V, []K] {
-	return Compose(Keys[K, V](), SortFunc[K](fn))
+	return Keys[K, V]().Then(SortFunc[K](fn))
 }
 
 func SortedValues[K comparable, V cmp.Ordered]() Comp[map[K]V, []V] {
-	return Compose(Values[K, V](), Sort[V]())
+	return Values[K, V]().Then(Sort[V]())
 }
 
 func SortedValuesFunc[K comparable, V any](fn Compare[V]) Comp[map[K]V, []V] {
-	return Compose(Values[K, V](), SortFunc[V](fn))
+	return Values[K, V]().Then(SortFunc[V](fn))
 }

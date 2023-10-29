@@ -41,13 +41,13 @@ func Map[In, Out any](fn Mapper[In, Out]) Comp[[]In, []Out] {
 }
 
 func SortedMap[In any, Out cmp.Ordered](fn Mapper[In, Out]) Comp[[]In, []Out] {
-	return Compose(Map(fn), Sort[Out]())
+	return Map(fn).Then(Sort[Out]())
 }
 
 func SortedMapFunc[In any, Out cmp.Ordered](
 	fn Mapper[In, Out], comp Compare[Out],
 ) Comp[[]In, []Out] {
-	return Compose(Map(fn), SortFunc(comp))
+	return Map(fn).Then(SortFunc(comp))
 }
 
 func Sort[T cmp.Ordered]() Comp[[]T, []T] {

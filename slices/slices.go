@@ -6,6 +6,18 @@ import (
 	"github.com/kode4food/comb"
 )
 
+func Filter[T any](in []T, fn comb.Predicate[T]) []T {
+	return comb.Filter(fn).Must()(in)
+}
+
+func Find[T any](in []T, fn comb.Predicate[T]) T {
+	return comb.Find(fn).Must()(in)
+}
+
+func Map[In, Out any](in []In, fn comb.Mapper[In, Out]) []Out {
+	return comb.Map(fn).Must()(in)
+}
+
 func SortedMap[In any, Out cmp.Ordered](
 	in []In, fn comb.Mapper[In, Out],
 ) []Out {
