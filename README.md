@@ -1,4 +1,3 @@
-<img src="./static/logo.svg" style="float:right;height:100px"/>
-# Comb
- 
+# Comb <img src="./static/logo.svg" align="right" height="100"/>
+
 Comprehension Combinators for Go
