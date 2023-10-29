@@ -1,21 +1,35 @@
 package comb
 
-import "github.com/kode4food/comb/maps"
+import (
+	"cmp"
 
-type (
-	MapBuilder[K comparable, V any] map[K]V
-
-	SliceBuilder[T any] []T
+	"github.com/kode4food/comb/basics"
 )
 
-func Map[K comparable, V any](in map[K]V) MapBuilder[K, V] {
-	return in
+func Keys[K comparable, V any]() Comp[map[K]V, []K] {
+	return func(in map[K]V) ([]K, error) {
+		return basics.MapKeys(in), nil
+	}
 }
 
-func (m MapBuilder[K, _]) Keys() SliceBuilder[K] {
-	return maps.Keys(m)
+func Values[K comparable, V any]() Comp[map[K]V, []V] {
+	return func(in map[K]V) ([]V, error) {
+		return basics.MapValues(in), nil
+	}
 }
 
-func (m MapBuilder[_, V]) Values() []V {
-	return maps.Values(m)
+func SortedKeys[K cmp.Ordered, V any]() Comp[map[K]V, []K] {
+	return Compose(Keys[K, V](), Sort[K]())
+}
+
+func SortedKeysFunc[K comparable, V any](fn Compare[K]) Comp[map[K]V, []K] {
+	return Compose(Keys[K, V](), SortFunc[K](fn))
+}
+
+func SortedValues[K comparable, V cmp.Ordered]() Comp[map[K]V, []V] {
+	return Compose(Values[K, V](), Sort[V]())
+}
+
+func SortedValuesFunc[K comparable, V any](fn Compare[V]) Comp[map[K]V, []V] {
+	return Compose(Values[K, V](), SortFunc[V](fn))
 }

@@ -1,16 +1,38 @@
-package slices_test
+package basics_test
 
 import (
 	"strings"
 	"testing"
 
-	"github.com/kode4food/comb/slices"
+	"github.com/kode4food/comb/basics"
 	"github.com/stretchr/testify/assert"
 )
 
+func TestMapKeys(t *testing.T) {
+	as := assert.New(t)
+	m := basics.MapKeys(map[string]any{
+		"age":  42,
+		"name": "bob",
+	})
+	basics.Sort(m)
+	as.Equal([]string{"age", "name"}, m)
+}
+
+func TestMapValues(t *testing.T) {
+	as := assert.New(t)
+	m := basics.MapValues(map[string]int{
+		"j": 8,
+		"e": 6,
+		"n": 7,
+		"y": 5,
+	})
+	basics.Sort(m)
+	as.Equal([]int{5, 6, 7, 8}, basics.Sort(m))
+}
+
 func TestMap(t *testing.T) {
 	as := assert.New(t)
-	m := slices.Map(
+	m := basics.Map(
 		[]string{"is", "Upper", "not", "lower"},
 		func(in string) bool {
 			return strings.ToLower(in) != in
@@ -19,21 +41,9 @@ func TestMap(t *testing.T) {
 	as.Equal([]bool{false, true, false, false}, m)
 }
 
-func TestSortedMap(t *testing.T) {
-	as := assert.New(t)
-
-	m := slices.SortedMap(
-		[]string{"c", "r", "b", "a"},
-		func(in string) string {
-			return in + "-mapped"
-		},
-	)
-	as.Equal([]string{"a-mapped", "b-mapped", "c-mapped", "r-mapped"}, m)
-}
-
 func TestFilter(t *testing.T) {
 	as := assert.New(t)
-	f := slices.Filter(
+	f := basics.Filter(
 		[]string{"is", "Upper", "not", "Lower"},
 		func(in string) bool {
 			return strings.ToLower(in) != in
@@ -44,7 +54,7 @@ func TestFilter(t *testing.T) {
 
 func TestFind(t *testing.T) {
 	as := assert.New(t)
-	s, ok := slices.Find(
+	s, ok := basics.Find(
 		[]string{"is", "Upper", "not", "Lower"},
 		func(in string) bool {
 			return strings.ToLower(in) != in
@@ -53,7 +63,7 @@ func TestFind(t *testing.T) {
 	as.True(ok)
 	as.Equal("Upper", s)
 
-	s, ok = slices.Find([]string{}, func(in string) bool {
+	s, ok = basics.Find([]string{}, func(in string) bool {
 		return strings.ToLower(in) != in
 	})
 	as.False(ok)
