@@ -32,6 +32,27 @@ func TestCompose(t *testing.T) {
 	as.EqualError(err, "test error")
 }
 
+func TestThen(t *testing.T) {
+	as := assert.New(t)
+
+	c := comb.Comb[bool, bool](func(in bool) (bool, error) {
+		if in {
+			return false, nil
+		}
+		return false, errors.New("test error")
+	}).Then(func(in bool) (bool, error) {
+		return !in, nil
+	})
+
+	r, err := c(true)
+	as.True(r)
+	as.Nil(err)
+
+	r, err = c(false)
+	as.False(r)
+	as.EqualError(err, "test error")
+}
+
 func TestMust(t *testing.T) {
 	as := assert.New(t)
 

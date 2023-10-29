@@ -11,29 +11,27 @@ import (
 
 func TestMap(t *testing.T) {
 	as := assert.New(t)
-	m := slices.Map(
-		[]string{"is", "Upper", "not", "lower"},
-		func(in string) bool {
-			return strings.ToLower(in) != in
-		},
-	)
+	c := slices.Map(func(in string) bool {
+		return strings.ToLower(in) != in
+	})
+	m, err := c([]string{"is", "Upper", "not", "lower"})
+	as.Nil(err)
 	as.Equal([]bool{false, true, false, false}, m)
 }
 
 func TestSortedMap(t *testing.T) {
 	as := assert.New(t)
-	sm := slices.SortedMap([]string{"c", "r", "b", "a"},
-		func(in string) string {
-			return in + "-mapped"
-		},
-	)
+	c := slices.SortedMap(func(in string) string {
+		return in + "-mapped"
+	})
+	sm, err := c([]string{"c", "r", "b", "a"})
+	as.Nil(err)
 	as.Equal([]string{"a-mapped", "b-mapped", "c-mapped", "r-mapped"}, sm)
 }
 
 func TestSortedMapFunc(t *testing.T) {
 	as := assert.New(t)
-	sm := slices.SortedMapFunc(
-		[]string{"c", "r", "b", "a"},
+	c := slices.SortedMapFunc(
 		func(in string) string {
 			return in + "-mapped"
 		},
@@ -41,57 +39,50 @@ func TestSortedMapFunc(t *testing.T) {
 			return -cmp.Compare(l, r)
 		},
 	)
+	sm, err := c([]string{"c", "r", "b", "a"})
+	as.Nil(err)
 	as.Equal([]string{"r-mapped", "c-mapped", "b-mapped", "a-mapped"}, sm)
 }
 
 func TestFilter(t *testing.T) {
 	as := assert.New(t)
-	f := slices.Filter(
-		[]string{"is", "Upper", "not", "Lower"},
-		func(in string) bool {
-			return strings.ToLower(in) != in
-		},
-	)
+	c := slices.Filter(func(in string) bool {
+		return strings.ToLower(in) != in
+	})
+	f, err := c([]string{"is", "Upper", "not", "Lower"})
+	as.Nil(err)
 	as.Equal([]string{"Upper", "Lower"}, f)
 }
 
 func TestFind(t *testing.T) {
 	as := assert.New(t)
-	f := slices.Find(
-		[]string{"is", "Upper", "not", "Lower"},
+	c := slices.Find(
 		func(in string) bool {
 			return strings.ToLower(in) != in
 		},
 	)
+	f, err := c([]string{"is", "Upper", "not", "Lower"})
+	as.Nil(err)
 	as.Equal("Upper", f)
-}
 
-func TestSort(t *testing.T) {
-	as := assert.New(t)
-	sm := slices.Sort([]string{"c", "r", "b", "a"})
-	as.Equal([]string{"a", "b", "c", "r"}, sm)
-}
-
-func TestSortFunc(t *testing.T) {
-	as := assert.New(t)
-	sm := slices.SortFunc(
-		[]string{"c", "r", "b", "a"},
-		func(l, r string) int {
-			return -cmp.Compare(l, r)
-		},
-	)
-	as.Equal([]string{"r", "c", "b", "a"}, sm)
+	f, err = c([]string{})
+	as.EqualError(err, slices.ErrElementNotFound)
+	as.Equal("", f)
 }
 
 func TestReduce(t *testing.T) {
 	as := assert.New(t)
-	r := slices.Reduce([]int{1, 2, 3}, func(res int, in int) int {
+	c := slices.Reduce(func(res int, in int) int {
 		return res + in
 	})
+	r, err := c([]int{1, 2, 3})
+	as.Nil(err)
 	as.Equal(6, r)
 
-	r = slices.ReduceFrom([]int{1, 2, 3}, 4, func(res int, in int) int {
+	c = slices.ReduceFrom(4, func(res int, in int) int {
 		return res * in
 	})
+	r, err = c([]int{1, 2, 3})
+	as.Nil(err)
 	as.Equal(24, r)
 }
