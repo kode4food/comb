@@ -14,8 +14,7 @@ func TestMapKeys(t *testing.T) {
 		"age":  42,
 		"name": "bob",
 	})
-	basics.Sort(m)
-	as.Equal([]string{"age", "name"}, m)
+	as.Equal([]string{"age", "name"}, basics.Sort(m))
 }
 
 func TestMapValues(t *testing.T) {
@@ -26,7 +25,6 @@ func TestMapValues(t *testing.T) {
 		"n": 7,
 		"y": 5,
 	})
-	basics.Sort(m)
 	as.Equal([]int{5, 6, 7, 8}, basics.Sort(m))
 }
 
@@ -68,4 +66,17 @@ func TestFind(t *testing.T) {
 	})
 	as.False(ok)
 	as.Equal("", s)
+}
+
+func TestReduce(t *testing.T) {
+	as := assert.New(t)
+	r := basics.Reduce([]int{1, 2, 3}, func(res int, in int) int {
+		return res + in
+	})
+	as.Equal(6, r)
+
+	r = basics.ReduceFrom([]int{1, 2, 3}, 4, func(res int, in int) int {
+		return res * in
+	})
+	as.Equal(24, r)
 }

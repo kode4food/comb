@@ -8,9 +8,10 @@ import (
 )
 
 type (
-	Mapper[In, Out any] func(In) Out
-	Predicate[T any]    func(T) bool
-	Compare[T any]      func(T, T) int
+	Mapper[In, Out any]  func(In) Out
+	Reducer[In, Out any] func(Out, In) Out
+	Predicate[T any]     func(T) bool
+	Compare[T any]       func(T, T) int
 )
 
 const (
@@ -59,5 +60,17 @@ func Sort[T cmp.Ordered]() Comb[[]T, []T] {
 func SortFunc[T any](fn Compare[T]) Comb[[]T, []T] {
 	return func(in []T) ([]T, error) {
 		return basics.SortFunc(in, fn), nil
+	}
+}
+
+func Reduce[In, Out any](fn Reducer[In, Out]) Comb[[]In, Out] {
+	return func(in []In) (Out, error) {
+		return basics.Reduce(in, fn), nil
+	}
+}
+
+func ReduceFrom[In, Out any](from Out, fn Reducer[In, Out]) Comb[[]In, Out] {
+	return func(in []In) (Out, error) {
+		return basics.ReduceFrom(in, from, fn), nil
 	}
 }

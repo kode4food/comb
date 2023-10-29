@@ -37,3 +37,11 @@ func Sort[T cmp.Ordered](in []T) []T {
 func SortFunc[T any](in []T, fn comb.Compare[T]) []T {
 	return comb.SortFunc(fn).Must()(in)
 }
+
+func Reduce[In, Out any](in []In, fn comb.Reducer[In, Out]) Out {
+	return comb.Reduce(fn).Must()(in)
+}
+
+func ReduceFrom[In, Out any](in []In, from Out, fn comb.Reducer[In, Out]) Out {
+	return comb.ReduceFrom(from, fn).Must()(in)
+}

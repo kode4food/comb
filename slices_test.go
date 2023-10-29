@@ -69,3 +69,20 @@ func TestFind(t *testing.T) {
 	as.EqualError(err, comb.ErrElementNotFound)
 	as.Equal("", f)
 }
+
+func TestReduce(t *testing.T) {
+	as := assert.New(t)
+	c := comb.Reduce(func(res int, in int) int {
+		return res + in
+	})
+	r, err := c([]int{1, 2, 3})
+	as.Nil(err)
+	as.Equal(6, r)
+
+	c = comb.ReduceFrom(4, func(res int, in int) int {
+		return res * in
+	})
+	r, err = c([]int{1, 2, 3})
+	as.Nil(err)
+	as.Equal(24, r)
+}

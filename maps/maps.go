@@ -4,14 +4,15 @@ import (
 	"cmp"
 
 	"github.com/kode4food/comb"
+	"github.com/kode4food/comb/basics"
 )
 
 func Keys[K comparable, V any](in map[K]V) []K {
-	return comb.Keys[K, V]().Must()(in)
+	return basics.MapKeys(in)
 }
 
 func Values[K comparable, V any](in map[K]V) []V {
-	return comb.Values[K, V]().Must()(in)
+	return basics.MapValues(in)
 }
 
 func SortedKeys[K cmp.Ordered, V any](in map[K]V) []K {

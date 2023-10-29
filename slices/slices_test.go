@@ -82,3 +82,16 @@ func TestSortFunc(t *testing.T) {
 	)
 	as.Equal([]string{"r", "c", "b", "a"}, sm)
 }
+
+func TestReduce(t *testing.T) {
+	as := assert.New(t)
+	r := slices.Reduce([]int{1, 2, 3}, func(res int, in int) int {
+		return res + in
+	})
+	as.Equal(6, r)
+
+	r = slices.ReduceFrom([]int{1, 2, 3}, 4, func(res int, in int) int {
+		return res * in
+	})
+	as.Equal(24, r)
+}

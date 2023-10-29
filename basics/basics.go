@@ -75,3 +75,30 @@ func SortFunc[T any](in []T, fn func(T, T) int) []T {
 	slices.SortFunc(res, fn)
 	return res
 }
+
+func Reduce[In, Out any](in []In, fn func(Out, In) Out) Out {
+	return IndexedReduce(in, func(res Out, in In, _ int) Out {
+		return fn(res, in)
+	})
+}
+
+func ReduceFrom[In, Out any](in []In, from Out, fn func(Out, In) Out) Out {
+	return IndexedReduceFrom(in, from, func(res Out, in In, _ int) Out {
+		return fn(res, in)
+	})
+}
+
+func IndexedReduce[In, Out any](in []In, fn func(Out, In, int) Out) Out {
+	var from Out
+	return IndexedReduceFrom(in, from, fn)
+}
+
+func IndexedReduceFrom[In, Out any](
+	in []In, from Out, fn func(Out, In, int) Out,
+) Out {
+	res := from
+	for i, e := range in {
+		res = fn(res, e, i)
+	}
+	return res
+}
