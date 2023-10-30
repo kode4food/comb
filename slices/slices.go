@@ -40,8 +40,7 @@ const (
 	ErrElementNotFound = "element not found"
 )
 
-// Filter returns a comb.Comb that filters elements of a slice based on a
-// predicate.
+// Filter returns a Comb that filters elements of a slice based on a predicate.
 func Filter[T any](fn Predicate[T]) comb.Comb[[]T, []T] {
 	return func(in []T) ([]T, error) {
 		res := make([]T, 0, len(in))
@@ -54,7 +53,7 @@ func Filter[T any](fn Predicate[T]) comb.Comb[[]T, []T] {
 	}
 }
 
-// IndexedFind returns a comb.Comb that finds the first element in a slice that
+// IndexedFind returns a Comb that finds the first element in a slice that
 // satisfies an indexed predicate.
 func IndexedFind[T any](fn IndexedPredicate[T]) comb.Comb[[]T, T] {
 	return func(in []T) (T, error) {
@@ -68,15 +67,15 @@ func IndexedFind[T any](fn IndexedPredicate[T]) comb.Comb[[]T, T] {
 	}
 }
 
-// Find returns a comb.Comb that finds the first element in a slice that
-// satisfies a predicate.
+// Find returns a Comb that finds the first element in a slice that satisfies a
+// predicate.
 func Find[T any](fn Predicate[T]) comb.Comb[[]T, T] {
 	return IndexedFind(func(in T, _ int) bool {
 		return fn(in)
 	})
 }
 
-// IndexedMap returns a comb.Comb that maps a slice using an indexed mapping
+// IndexedMap returns a Comb that maps a slice using an indexed mapping
 // function.
 func IndexedMap[In, Out any](fn IndexedMapper[In, Out]) comb.Comb[[]In, []Out] {
 	return func(in []In) ([]Out, error) {
@@ -88,35 +87,35 @@ func IndexedMap[In, Out any](fn IndexedMapper[In, Out]) comb.Comb[[]In, []Out] {
 	}
 }
 
-// Map returns a comb.Comb that maps a slice using a mapping function.
+// Map returns a Comb that maps a slice using a mapping function.
 func Map[In, Out any](fn Mapper[In, Out]) comb.Comb[[]In, []Out] {
 	return IndexedMap(func(in In, _ int) Out {
 		return fn(in)
 	})
 }
 
-// SortedMap returns a comb.Comb that maps a slice and then sorts it based on
-// the output values.
+// SortedMap returns a Comb that maps a slice and then sorts it based on the
+// output values.
 func SortedMap[In any, Out cmp.Ordered](
 	fn Mapper[In, Out],
 ) comb.Comb[[]In, []Out] {
 	return Map(fn).Then(Sort[Out]())
 }
 
-// SortedMapFunc returns a comb.Comb that maps a slice and then sorts it using
-// a custom comparison function.
+// SortedMapFunc returns a Comb that maps a slice and then sorts it using a
+// custom comparison function.
 func SortedMapFunc[In any, Out cmp.Ordered](
 	fn Mapper[In, Out], comp Compare[Out],
 ) comb.Comb[[]In, []Out] {
 	return Map(fn).Then(SortFunc(comp))
 }
 
-// Sort returns a comb.Comb that sorts a slice.
+// Sort returns a Comb that sorts a slice.
 func Sort[T cmp.Ordered]() comb.Comb[[]T, []T] {
 	return SortFunc(cmp.Compare[T])
 }
 
-// SortFunc returns a comb.Comb that sorts a slice using a custom comparison
+// SortFunc returns a Comb that sorts a slice using a custom comparison
 // function.
 func SortFunc[T any](fn Compare[T]) comb.Comb[[]T, []T] {
 	return func(in []T) ([]T, error) {
@@ -127,15 +126,15 @@ func SortFunc[T any](fn Compare[T]) comb.Comb[[]T, []T] {
 	}
 }
 
-// Reduce returns a comb.Comb that reduces a slice using a reduction function.
+// Reduce returns a Comb that reduces a slice using a reduction function.
 func Reduce[In, Out any](fn Reducer[In, Out]) comb.Comb[[]In, Out] {
 	return IndexedReduce(func(out Out, in In, _ int) Out {
 		return fn(out, in)
 	})
 }
 
-// ReduceFrom returns a comb.Comb that reduces a slice using a reduction
-// function and an initial value.
+// ReduceFrom returns a Comb that reduces a slice using a reduction function
+// and an initial value.
 func ReduceFrom[In, Out any](
 	from Out, fn Reducer[In, Out],
 ) comb.Comb[[]In, Out] {
@@ -144,8 +143,8 @@ func ReduceFrom[In, Out any](
 	})
 }
 
-// IndexedReduce returns a comb.Comb that reduces a slice using an indexed
-// reduction function.
+// IndexedReduce returns a Comb that reduces a slice using an indexed reduction
+// function.
 func IndexedReduce[In, Out any](
 	fn IndexedReducer[In, Out],
 ) comb.Comb[[]In, Out] {
@@ -155,7 +154,7 @@ func IndexedReduce[In, Out any](
 	})
 }
 
-// IndexedReduceFrom returns a comb.Comb that reduces a slice using an indexed
+// IndexedReduceFrom returns a Comb that reduces a slice using an indexed
 // reduction function and an initial value.
 func IndexedReduceFrom[In, Out any](
 	from Out, fn IndexedReducer[In, Out],

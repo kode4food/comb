@@ -8,7 +8,7 @@ import (
 )
 
 // MapKeys extracts and returns the keys of a map as a slice, panicking if an
-// error occurs.
+// error occurs
 func MapKeys[K comparable, V any](in map[K]V) []K {
 	return maps.Keys[K, V]().Must()(in)
 }
