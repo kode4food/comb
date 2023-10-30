@@ -62,16 +62,20 @@ func SortFunc[T any](in []T, fn slices.Compare[T]) []T {
 	return slices.SortFunc(fn).Must()(in)
 }
 
-// Reduce applies a reduction function to reduce elements of a slice to a
-// single result value.
-func Reduce[In, Out any](in []In, fn slices.Reducer[In, Out]) Out {
-	return slices.Reduce(fn).Must()(in)
+// FoldLeft applies a reduction function to reduce elements of a slice to a
+// single result value, starting from an initial value, operating on the
+// elements of the slice from left to right.
+func FoldLeft[In, Out any](
+	in []In, from Out, fn slices.Folder[In, Out],
+) Out {
+	return slices.FoldLeft(from, fn).Must()(in)
 }
 
-// ReduceFrom applies a reduction function to reduce elements of a slice to a
-// single result value, starting from an initial value.
-func ReduceFrom[In, Out any](
-	in []In, from Out, fn slices.Reducer[In, Out],
+// FoldRight applies a reduction function to reduce elements of a slice to a
+// single result value, starting from an initial value, operating on the
+// elements of the slice from right to left.
+func FoldRight[In, Out any](
+	in []In, from Out, fn slices.Folder[In, Out],
 ) Out {
-	return slices.ReduceFrom(from, fn).Must()(in)
+	return slices.FoldRight(from, fn).Must()(in)
 }

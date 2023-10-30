@@ -98,13 +98,13 @@ func TestSortFunc(t *testing.T) {
 
 func TestReduce(t *testing.T) {
 	as := assert.New(t)
-	r := basics.Reduce([]int{1, 2, 3}, func(res int, in int) int {
-		return res + in
+	r := basics.FoldLeft([]int{1, 2, 3, 4, 5}, 0, func(acc, elem int) int {
+		return acc - elem
 	})
-	as.Equal(6, r)
+	as.Equal(-15, r)
 
-	r = basics.ReduceFrom([]int{1, 2, 3}, 4, func(res int, in int) int {
-		return res * in
+	r = basics.FoldRight([]int{1, 2, 3, 4, 5}, 0, func(acc, elem int) int {
+		return elem - acc
 	})
-	as.Equal(24, r)
+	as.Equal(3, r)
 }

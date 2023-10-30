@@ -72,17 +72,17 @@ func TestFind(t *testing.T) {
 
 func TestReduce(t *testing.T) {
 	as := assert.New(t)
-	c := slices.Reduce(func(res int, in int) int {
-		return res + in
+	c := slices.FoldLeft(0, func(acc, elem int) int {
+		return acc - elem
 	})
-	r, err := c([]int{1, 2, 3})
+	r, err := c([]int{1, 2, 3, 4})
 	as.Nil(err)
-	as.Equal(6, r)
+	as.Equal(-10, r)
 
-	c = slices.ReduceFrom(4, func(res int, in int) int {
-		return res * in
+	c = slices.FoldRight(0, func(acc, elem int) int {
+		return elem - acc
 	})
-	r, err = c([]int{1, 2, 3})
+	r, err = c([]int{1, 2, 3, 4})
 	as.Nil(err)
-	as.Equal(24, r)
+	as.Equal(-2, r)
 }

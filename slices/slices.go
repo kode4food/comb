@@ -10,29 +10,30 @@ import (
 
 type (
 	// Mapper is a function type that maps an input value to an output value.
-	Mapper[In, Out any] func(In) Out
+	Mapper[In, Out any] func(elem In) Out
 
 	// IndexedMapper is a function type that maps an input value to an output
-	// value with an index.
-	IndexedMapper[In, Out any] func(In, int) Out
+	// value, providing the index of the input within its slice
+	IndexedMapper[In, Out any] func(elem In, idx int) Out
 
-	// Reducer is a function type that reduces input values to an output value.
-	Reducer[In, Out any] func(Out, In) Out
+	// Folder is a function type that reduces input values to an output value.
+	Folder[In, Out any] func(acc Out, elem In) Out
 
-	// IndexedReducer is a function type that reduces input values to an output
-	// value with an index.
-	IndexedReducer[In, Out any] func(Out, In, int) Out
+	// IndexedFolder is a function type that reduces input values to an output
+	// value, providing the index of the input within its slice
+	IndexedFolder[In, Out any] func(acc Out, elem In, idx int) Out
 
 	// Predicate is a function type that tests a value against a condition.
-	Predicate[T any] func(T) bool
+	Predicate[T any] func(elem T) bool
 
 	// IndexedPredicate is a function type that tests a value against a
-	// condition with an index.
-	IndexedPredicate[T any] func(T, int) bool
+	// condition with an index, providing the index of the input within its
+	// slice
+	IndexedPredicate[T any] func(elem T, idx int) bool
 
 	// Compare is a function type that compares two values and returns an
 	// integer result.
-	Compare[T any] func(T, T) int
+	Compare[T any] func(left T, right T) int
 )
 
 const (
@@ -126,44 +127,54 @@ func SortFunc[T any](fn Compare[T]) comb.Comb[[]T, []T] {
 	}
 }
 
-// Reduce returns a Comb that reduces a slice using a reduction function.
-func Reduce[In, Out any](fn Reducer[In, Out]) comb.Comb[[]In, Out] {
-	return IndexedReduce(func(out Out, in In, _ int) Out {
-		return fn(out, in)
-	})
-}
-
-// ReduceFrom returns a Comb that reduces a slice using a reduction function
-// and an initial value.
-func ReduceFrom[In, Out any](
-	from Out, fn Reducer[In, Out],
+// FoldLeft returns a Comb that reduces a slice using a reduction function
+// and an initial value, operating on the elements of the slice from left to
+// right.
+func FoldLeft[In, Out any](
+	from Out, fn Folder[In, Out],
 ) comb.Comb[[]In, Out] {
-	return IndexedReduceFrom(from, func(out Out, in In, _ int) Out {
-		return fn(out, in)
+	return IndexedFoldLeft(from, func(acc Out, elem In, _ int) Out {
+		return fn(acc, elem)
 	})
 }
 
-// IndexedReduce returns a Comb that reduces a slice using an indexed reduction
-// function.
-func IndexedReduce[In, Out any](
-	fn IndexedReducer[In, Out],
-) comb.Comb[[]In, Out] {
-	var from Out
-	return IndexedReduceFrom(from, func(out Out, in In, idx int) Out {
-		return fn(out, in, idx)
-	})
-}
-
-// IndexedReduceFrom returns a Comb that reduces a slice using an indexed
-// reduction function and an initial value.
-func IndexedReduceFrom[In, Out any](
-	from Out, fn IndexedReducer[In, Out],
+// IndexedFoldLeft returns a Comb that reduces a slice using an indexed
+// reduction function and an initial value, operating on the elements of the
+// slice from left to right.
+func IndexedFoldLeft[In, Out any](
+	from Out, fn IndexedFolder[In, Out],
 ) comb.Comb[[]In, Out] {
 	return func(in []In) (Out, error) {
-		res := from
-		for i, e := range in {
-			res = fn(res, e, i)
+		acc := from
+		for i, elem := range in {
+			acc = fn(acc, elem, i)
 		}
-		return res, nil
+		return acc, nil
+	}
+}
+
+// FoldRight returns a Comb that reduces a slice using a reduction function
+// and an initial value, operating on the elements of the slice from right to
+// left.
+func FoldRight[In, Out any](
+	from Out, fn Folder[In, Out],
+) comb.Comb[[]In, Out] {
+	return IndexedFoldRight(from, func(acc Out, elem In, _ int) Out {
+		return fn(acc, elem)
+	})
+}
+
+// IndexedFoldRight returns a Comb that reduces a slice using an indexed
+// reduction function and an initial value, operating on the elements of the
+// slice from right to left.
+func IndexedFoldRight[In, Out any](
+	from Out, fn IndexedFolder[In, Out],
+) comb.Comb[[]In, Out] {
+	return func(in []In) (Out, error) {
+		acc := from
+		for i := len(in) - 1; i >= 0; i-- {
+			acc = fn(acc, in[i], i)
+		}
+		return acc, nil
 	}
 }
