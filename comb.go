@@ -12,6 +12,15 @@ type (
 	// Binder is a function type that takes an input and returns a Comb that
 	// depends on the provided input.
 	Binder[In, Out any] func(In) Comb[In, Out]
+
+	// Folder is a function type that reduces input values to an output value.
+	Folder[In, Out any] func(acc Out, elem In) Out
+
+	// Mapper is a function type that maps an input value to an output value.
+	Mapper[In, Out any] func(elem In) Out
+
+	// Predicate is a function type that tests a value against a condition.
+	Predicate[T any] func(elem T) bool
 )
 
 // Then composes two Comb functions, where the output of the first becomes the

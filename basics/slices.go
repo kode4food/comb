@@ -3,33 +3,34 @@ package basics
 import (
 	"cmp"
 
+	"github.com/kode4food/comb"
 	"github.com/kode4food/comb/slices"
 )
 
 // Filter applies a predicate function to filter elements of a slice and
 // returns the filtered slice.
-func Filter[T any](in []T, fn slices.Predicate[T]) []T {
+func Filter[T any](in []T, fn comb.Predicate[T]) []T {
 	return slices.Filter(fn).Must()(in)
 }
 
 // Find applies a predicate function to find the first element in a slice that
 // satisfies the condition. It returns the found element and a boolean
 // indicating if an element was found.
-func Find[T any](in []T, fn slices.Predicate[T]) (T, bool) {
+func Find[T any](in []T, fn comb.Predicate[T]) (T, bool) {
 	res, err := slices.Find(fn)(in)
 	return res, err == nil
 }
 
 // Map applies a mapping function to transform elements of a slice and returns
 // the mapped slice.
-func Map[In, Out any](in []In, fn slices.Mapper[In, Out]) []Out {
+func Map[In, Out any](in []In, fn comb.Mapper[In, Out]) []Out {
 	return slices.Map(fn).Must()(in)
 }
 
 // SortedMap applies a mapping function to transform elements of a slice and
 // returns the sorted mapped slice.
 func SortedMap[In any, Out cmp.Ordered](
-	in []In, fn slices.Mapper[In, Out],
+	in []In, fn comb.Mapper[In, Out],
 ) []Out {
 	return slices.SortedMap(fn).Must()(in)
 }
@@ -38,7 +39,7 @@ func SortedMap[In any, Out cmp.Ordered](
 // and returns the sorted mapped slice using a custom comparison function for
 // sorting.
 func SortedMapFunc[In any, Out cmp.Ordered](
-	in []In, fn slices.Mapper[In, Out], comp slices.Compare[Out],
+	in []In, fn comb.Mapper[In, Out], comp slices.Compare[Out],
 ) []Out {
 	return slices.SortedMapFunc(fn, comp).Must()(in)
 }
@@ -66,7 +67,7 @@ func SortFunc[T any](in []T, fn slices.Compare[T]) []T {
 // single result value, starting from an initial value, operating on the
 // elements of the slice from left to right.
 func FoldLeft[In, Out any](
-	in []In, from Out, fn slices.Folder[In, Out],
+	in []In, from Out, fn comb.Folder[In, Out],
 ) Out {
 	return slices.FoldLeft(from, fn).Must()(in)
 }
@@ -75,7 +76,7 @@ func FoldLeft[In, Out any](
 // single result value, starting from an initial value, operating on the
 // elements of the slice from right to left.
 func FoldRight[In, Out any](
-	in []In, from Out, fn slices.Folder[In, Out],
+	in []In, from Out, fn comb.Folder[In, Out],
 ) Out {
 	return slices.FoldRight(from, fn).Must()(in)
 }

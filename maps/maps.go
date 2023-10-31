@@ -7,8 +7,27 @@ import (
 	"github.com/kode4food/comb/slices"
 )
 
-// Keys returns a Comb that extracts the keys of a map and returns them as
-// a slice.
+type Pair[K comparable, V any] struct {
+	Key   K
+	Value V
+}
+
+// Pairs returns a Comb that extracts the keys and values of a map and returns
+// them as a slice of typed pairs
+func Pairs[K comparable, V any]() comb.Comb[map[K]V, []Pair[K, V]] {
+	return func(in map[K]V) ([]Pair[K, V], error) {
+		res := make([]Pair[K, V], len(in))
+		i := 0
+		for k, v := range in {
+			res[i] = Pair[K, V]{k, v}
+			i++
+		}
+		return res, nil
+	}
+}
+
+// Keys returns a Comb that extracts the keys of a map and returns them as a
+// slice.
 func Keys[K comparable, V any]() comb.Comb[map[K]V, []K] {
 	return func(in map[K]V) ([]K, error) {
 		res := make([]K, len(in))

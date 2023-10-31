@@ -9,22 +9,13 @@ import (
 )
 
 type (
-	// Mapper is a function type that maps an input value to an output value.
-	Mapper[In, Out any] func(elem In) Out
-
-	// IndexedMapper is a function type that maps an input value to an output
-	// value, providing the index of the input within its slice
-	IndexedMapper[In, Out any] func(elem In, idx int) Out
-
-	// Folder is a function type that reduces input values to an output value.
-	Folder[In, Out any] func(acc Out, elem In) Out
-
 	// IndexedFolder is a function type that reduces input values to an output
 	// value, providing the index of the input within its slice
 	IndexedFolder[In, Out any] func(acc Out, elem In, idx int) Out
 
-	// Predicate is a function type that tests a value against a condition.
-	Predicate[T any] func(elem T) bool
+	// IndexedMapper is a function type that maps an input value to an output
+	// value, providing the index of the input within its slice
+	IndexedMapper[In, Out any] func(elem In, idx int) Out
 
 	// IndexedPredicate is a function type that tests a value against a
 	// condition with an index, providing the index of the input within its
@@ -42,7 +33,7 @@ const (
 )
 
 // Filter returns a Comb that filters elements of a slice based on a predicate.
-func Filter[T any](fn Predicate[T]) comb.Comb[[]T, []T] {
+func Filter[T any](fn comb.Predicate[T]) comb.Comb[[]T, []T] {
 	return func(in []T) ([]T, error) {
 		res := make([]T, 0, len(in))
 		for _, e := range in {
@@ -70,7 +61,7 @@ func IndexedFind[T any](fn IndexedPredicate[T]) comb.Comb[[]T, T] {
 
 // Find returns a Comb that finds the first element in a slice that satisfies a
 // predicate.
-func Find[T any](fn Predicate[T]) comb.Comb[[]T, T] {
+func Find[T any](fn comb.Predicate[T]) comb.Comb[[]T, T] {
 	return IndexedFind(func(in T, _ int) bool {
 		return fn(in)
 	})
@@ -89,7 +80,7 @@ func IndexedMap[In, Out any](fn IndexedMapper[In, Out]) comb.Comb[[]In, []Out] {
 }
 
 // Map returns a Comb that maps a slice using a mapping function.
-func Map[In, Out any](fn Mapper[In, Out]) comb.Comb[[]In, []Out] {
+func Map[In, Out any](fn comb.Mapper[In, Out]) comb.Comb[[]In, []Out] {
 	return IndexedMap(func(in In, _ int) Out {
 		return fn(in)
 	})
@@ -98,7 +89,7 @@ func Map[In, Out any](fn Mapper[In, Out]) comb.Comb[[]In, []Out] {
 // SortedMap returns a Comb that maps a slice and then sorts it based on the
 // output values.
 func SortedMap[In any, Out cmp.Ordered](
-	fn Mapper[In, Out],
+	fn comb.Mapper[In, Out],
 ) comb.Comb[[]In, []Out] {
 	return Map(fn).Then(Sort[Out]())
 }
@@ -106,7 +97,7 @@ func SortedMap[In any, Out cmp.Ordered](
 // SortedMapFunc returns a Comb that maps a slice and then sorts it using a
 // custom comparison function.
 func SortedMapFunc[In any, Out cmp.Ordered](
-	fn Mapper[In, Out], comp Compare[Out],
+	fn comb.Mapper[In, Out], comp Compare[Out],
 ) comb.Comb[[]In, []Out] {
 	return Map(fn).Then(SortFunc(comp))
 }
@@ -131,7 +122,7 @@ func SortFunc[T any](fn Compare[T]) comb.Comb[[]T, []T] {
 // and an initial value, operating on the elements of the slice from left to
 // right.
 func FoldLeft[In, Out any](
-	from Out, fn Folder[In, Out],
+	from Out, fn comb.Folder[In, Out],
 ) comb.Comb[[]In, Out] {
 	return IndexedFoldLeft(from, func(acc Out, elem In, _ int) Out {
 		return fn(acc, elem)
@@ -157,7 +148,7 @@ func IndexedFoldLeft[In, Out any](
 // and an initial value, operating on the elements of the slice from right to
 // left.
 func FoldRight[In, Out any](
-	from Out, fn Folder[In, Out],
+	from Out, fn comb.Folder[In, Out],
 ) comb.Comb[[]In, Out] {
 	return IndexedFoldRight(from, func(acc Out, elem In, _ int) Out {
 		return fn(acc, elem)
