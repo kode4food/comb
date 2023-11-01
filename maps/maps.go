@@ -14,12 +14,12 @@ type Pair[K comparable, V any] struct {
 
 // Pairs returns a Comb that extracts the keys and values of a map and returns
 // them as a slice of typed pairs
-func Pairs[K comparable, V any]() comb.Comb[map[K]V, []Pair[K, V]] {
-	return func(in map[K]V) ([]Pair[K, V], error) {
-		res := make([]Pair[K, V], len(in))
+func Pairs[K comparable, V any]() comb.Comb[map[K]V, []*Pair[K, V]] {
+	return func(in map[K]V) ([]*Pair[K, V], error) {
+		res := make([]*Pair[K, V], len(in))
 		i := 0
 		for k, v := range in {
-			res[i] = Pair[K, V]{k, v}
+			res[i] = &Pair[K, V]{k, v}
 			i++
 		}
 		return res, nil

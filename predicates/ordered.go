@@ -6,13 +6,13 @@ import (
 	"github.com/kode4food/comb"
 )
 
-func EqualTo[T cmp.Ordered](to T) comb.Predicate[T] {
+func EqualTo[T comparable](to T) comb.Predicate[T] {
 	return func(elem T) bool {
 		return elem == to
 	}
 }
 
-func NotEqualTo[T cmp.Ordered](to T) comb.Predicate[T] {
+func NotEqualTo[T comparable](to T) comb.Predicate[T] {
 	return func(elem T) bool {
 		return elem != to
 	}

@@ -9,6 +9,23 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestPairs(t *testing.T) {
+	as := assert.New(t)
+	c := maps.Pairs[string, any]()
+	k, err := c(map[string]any{
+		"age":  42,
+		"name": "bob",
+	})
+	as.Nil(err)
+	slices.SortFunc(k, func(l, r *maps.Pair[string, any]) int {
+		return cmp.Compare(l.Key, r.Key)
+	})
+	as.Equal("age", k[0].Key)
+	as.Equal(42, k[0].Value)
+	as.Equal("name", k[1].Key)
+	as.Equal("bob", k[1].Value)
+}
+
 func TestKeys(t *testing.T) {
 	as := assert.New(t)
 	c := maps.Keys[string, any]()
