@@ -6,38 +6,38 @@ import (
 	"github.com/kode4food/comb"
 )
 
-func EqualTo[T comparable](to T) comb.Predicate[T] {
+func EqualTo[T cmp.Ordered](to T) comb.Predicate[T] {
 	return func(elem T) bool {
-		return elem == to
+		return cmp.Compare(elem, to) == 0
 	}
 }
 
-func NotEqualTo[T comparable](to T) comb.Predicate[T] {
+func NotEqualTo[T cmp.Ordered](to T) comb.Predicate[T] {
 	return func(elem T) bool {
-		return elem != to
+		return cmp.Compare(elem, to) != 0
 	}
 }
 
 func LessThan[T cmp.Ordered](to T) comb.Predicate[T] {
 	return func(elem T) bool {
-		return elem < to
+		return cmp.Compare(elem, to) == -1
 	}
 }
 
 func LessThanOrEqualTo[T cmp.Ordered](to T) comb.Predicate[T] {
 	return func(elem T) bool {
-		return elem <= to
+		return cmp.Compare(elem, to) <= 0
 	}
 }
 
 func GreaterThan[T cmp.Ordered](to T) comb.Predicate[T] {
 	return func(elem T) bool {
-		return elem > to
+		return cmp.Compare(elem, to) == +1
 	}
 }
 
 func GreaterThanOrEqualTo[T cmp.Ordered](to T) comb.Predicate[T] {
 	return func(elem T) bool {
-		return elem >= to
+		return cmp.Compare(elem, to) >= 0
 	}
 }

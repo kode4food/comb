@@ -2,6 +2,16 @@ package predicates
 
 import "github.com/kode4food/comb"
 
+func IdenticalTo(to any) comb.Predicate[any] {
+	return func(elem any) bool {
+		return elem == to
+	}
+}
+
+func NotIdenticalTo(to any) comb.Predicate[any] {
+	return Not(IdenticalTo(to))
+}
+
 func IsA[T any]() comb.Predicate[any] {
 	return func(elem any) bool {
 		_, ok := elem.(T)
